@@ -8,8 +8,13 @@ import FilteredActions from '../FilteredActions/FilteredActions'
 import Frame from '../Frame/Frame'
 import { usePermissions } from '../../Providers/Permissions'
 import { useWalletAugmented } from '../../Providers/Wallet'
+import { useChainId } from '../../lib/chain-id'
 import { KNOWN_GOVERN_ROLES, KNOWN_QUEUE_ROLES } from '../../lib/known-roles'
-import { ETH_ANY_ADDRESS, ETH_EMPTY_HEX } from '../../lib/web3-utils'
+import {
+  getNetworkName,
+  ETH_ANY_ADDRESS,
+  ETH_EMPTY_HEX,
+} from '../../lib/web3-utils'
 
 const ACTIONS_PER_PAGE = 8
 
@@ -23,6 +28,8 @@ export default function ViewDao({ dao }: ViewDaoProps): JSX.Element {
   const history = useHistory()
   const { ethers } = useWalletAugmented()
   const { permissions, populatePermissions } = usePermissions()
+  const { chainId } = useChainId()
+
   const { schedule: canSchedule } = permissions
 
   useEffect(() => {
@@ -38,7 +45,7 @@ export default function ViewDao({ dao }: ViewDaoProps): JSX.Element {
   }, [dao, populatePermissions])
 
   const handleNewAction = useCallback(() => {
-    history.push(`/${daoAddress}/new-action`)
+    history.push(`/${getNetworkName(chainId)}/${daoAddress}/new-action`)
   }, [history, daoAddress])
 
   return (
